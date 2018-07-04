@@ -49,6 +49,7 @@ public class ConnectivityServ extends HttpServlet {
         // ZermattSalesOrder
         // ZermattSalesOrder2
         // ZermattSalesOrderWorking
+        // ... and more, see destinations in SAP Cloud Platform - Java Application
         String destinationName = request.getParameter("destname");
         //String destinationName = "ZermattSalesOrder";
         
@@ -61,8 +62,9 @@ public class ConnectivityServ extends HttpServlet {
                 destination = (HttpDestination) destinationFactory.getDestination(destinationName);
             } else {
                 // The default request to the Servlet will use outbound-internet-destination
-                destinationName = "outbound-internet-destination";
-                destination = (HttpDestination) ctx.lookup("java:comp/env/" +  destinationName);
+            	   	throw new ServletException("Please adapt URL call, use destination name by appending '?destname=' to URL."
+            	   							 + "For example enter URL 'https://zermattconnectorx74e508e42.hana.ondemand.com/ZermattConnector/?destname=ZermattSalesOrder'."
+            	   							 + "Working destinations are ZermattSalesOrder, ZermattSalesOrderItem, ZermattSalesOrder2, ZermattSalesOrderItem2, ZermattWorkingSalesOrder, ZermattWorkingSalesOrderItem");
             }
  
             // Create HTTP client
@@ -70,6 +72,7 @@ public class ConnectivityServ extends HttpServlet {
  
             // Execute HTTP request
             HttpGet httpGet = new HttpGet();
+            httpGet.addHeader("content-type", "application/json");
             HttpResponse httpResponse = httpClient.execute(httpGet);
             
             // Check response status code
